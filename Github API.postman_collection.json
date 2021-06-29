@@ -1,0 +1,2198 @@
+{
+	"info": {
+		"_postman_id": "5b12546d-5cf7-4390-803f-28cb526d7dcf",
+		"name": "Github API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Repositories",
+			"item": [
+				{
+					"name": "Organisation",
+					"item": [
+						{
+							"name": "Get Organisation Repositories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.github.com/orgs/{{organisation}}/repos",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"orgs",
+										"{{organisation}}",
+										"repos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Organisation Repository (without Team)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"{{repositoryName}}\",\r\n    \"description\": \"This is your first repository\",\r\n    \"homepage\": \"https://github.com\",\r\n    \"private\": false,\r\n    \"has_issues\": true,\r\n    \"has_projects\": true,\r\n    \"has_wiki\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.github.com/orgs/{{organisation}}/repos",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"orgs",
+										"{{organisation}}",
+										"repos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Organisation Repository (with Team)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"{{repositoryName}}\",\r\n    \"description\": \"This is your first repository\",\r\n    \"homepage\": \"https://github.com\",\r\n    \"private\": false,\r\n    \"has_issues\": true,\r\n    \"has_projects\": true,\r\n    \"has_wiki\": true,\r\n    \"team_id\": {{teamId}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.github.com/orgs/{{organisation}}/repos",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"orgs",
+										"{{organisation}}",
+										"repos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Organisation Repository",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://api.github.com/repos/{{organisation}}/:repo",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"repos",
+										"{{organisation}}",
+										":repo"
+									],
+									"variable": [
+										{
+											"key": "repo",
+											"value": "{{repositoryName}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "Create repository",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.test(\"Repository name\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"repositoryName\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var random = Math.random().toString(36).substring(2);",
+											"var repositoryName = \"My-repository-\" + random;",
+											"pm.environment.set(\"repositoryName\", repositoryName);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"{{repositoryName}}\",\n    \"description\": \"This is your first repository\",\n    \"homepage\": \"https://github.com\",\n    \"private\": false,\n    \"has_issues\": true,\n    \"has_projects\": true,\n    \"has_wiki\": true\n}"
+								},
+								"url": {
+									"raw": "https://api.github.com/user/repos",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"user",
+										"repos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create issue",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"",
+											"pm.test(\"Check label\", function () {",
+											"    pm.expect(jsonData.labels[0].name).to.eql(\"bug\");",
+											"});",
+											"",
+											"console.log(jsonData['labels']);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Found a bug\",\n  \"body\": \"I'm having a problem with this.\",\n  \"labels\": [\n    \"bug\"\n  ]\n}"
+								},
+								"url": {
+									"raw": "https://api.github.com/repos/:owner/:repo/issues",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"repos",
+										":owner",
+										":repo",
+										"issues"
+									],
+									"variable": [
+										{
+											"key": "owner",
+											"value": "{{owner}}"
+										},
+										{
+											"key": "repo",
+											"value": "{{repositoryName}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete repository",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://api.github.com/repos/:owner/:repo",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"repos",
+										":owner",
+										":repo"
+									],
+									"variable": [
+										{
+											"key": "owner",
+											"value": "{{owner}}"
+										},
+										{
+											"key": "repo",
+											"value": "{{repositoryName}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get deleted repository",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.github.com/repos/:owner/:repo",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"repos",
+										":owner",
+										":repo"
+									],
+									"variable": [
+										{
+											"key": "owner",
+											"value": "{{owner}}"
+										},
+										{
+											"key": "repo",
+											"value": "{{repositoryName}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Repositories",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.github.com/user/repos",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"user",
+										"repos"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "Organisation",
+					"item": [
+						{
+							"name": "Get Organisation Project",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/projects/{{projectId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"{{projectId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Organisation Projects",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/orgs/{{organisation}}/projects",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"orgs",
+										"{{organisation}}",
+										"projects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Organisation Project",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"{{projectName}}\",\r\n    \"body\": \"{{projectDescription}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.github.com/orgs/{{organisation}}/projects?Accept=application/vnd.github.inertia-preview+json",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"orgs",
+										"{{organisation}}",
+										"projects"
+									],
+									"query": [
+										{
+											"key": "Accept",
+											"value": "application/vnd.github.inertia-preview+json"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Organisation Project",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/projects/{{projectId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"{{projectId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "Get User Projects",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/users/{{user}}/projects",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"users",
+										"{{user}}",
+										"projects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create User Project",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"{{projectName}}\",\r\n    \"body\": \"{{projectDescription}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.github.com/user/projects",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"user",
+										"projects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete User Project",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/projects/{{projectId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"{{projectId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Collaborators",
+					"item": [
+						{
+							"name": "Delete Project Collaborator",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/projects/{{projectId}}/collaborators/{{user}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"{{projectId}}",
+										"collaborators",
+										"{{user}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Project Collaborators",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/projects/{{projectId}}/collaborators",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"{{projectId}}",
+										"collaborators"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Project Collaborator",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"permission\": \"{{permission}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.github.com/projects/{{projectId}}/collaborators/{{user}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"{{projectId}}",
+										"collaborators",
+										"{{user}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Collaborator Permission",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/projects/{{projectId}}/collaborators/{{user}}/permission",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"{{projectId}}",
+										"collaborators",
+										"{{user}}",
+										"permission"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cards",
+					"item": [
+						{
+							"name": "Get a Project Card",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/projects/columns/cards/{{cardId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"columns",
+										"cards",
+										"{{cardId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Project Cards",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/projects/columns/{{columnId}}/cards",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"columns",
+										"{{columnId}}",
+										"cards"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create a Project Card",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"note\" : \"{{cardName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.github.com/projects/columns/{{columnId}}/cards",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"columns",
+										"{{columnId}}",
+										"cards"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update a Project Card",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"note\" : \"{{cardName}}\",\r\n    \"archived\": {{cardArchivedStatus}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.github.com/projects/columns/cards/{{cardId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"columns",
+										"cards",
+										"{{cardId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Move a Project Card",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"position\": \"{{position}}\",\r\n    \"column_id\": {{moveColumnId}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.github.com/projects/columns/cards/{{cardId}}/moves",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"columns",
+										"cards",
+										"{{cardId}}",
+										"moves"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a Project Card",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/projects/columns/cards/{{cardId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"columns",
+										"cards",
+										"{{cardId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Columns",
+					"item": [
+						{
+							"name": "List Project Columns",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/projects/{{projectId}}/columns",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"{{projectId}}",
+										"columns"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get a Project Column",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/projects/columns/{{columnId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"columns",
+										"{{columnId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update a Project Column",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"{{columnName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.github.com/projects/columns/{{columnId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"columns",
+										"{{columnId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create a Project Column",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"{{columnName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.github.com/projects/{{projectId}}/columns",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"{{projectId}}",
+										"columns"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a Project Column",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.github.com/projects/columns/{{columnId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"columns",
+										"{{columnId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Move a Project Column",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.github.inertia-preview+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"position\" : \"{{columnPosition}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.github.com/projects/columns/{{columnId}}/moves",
+									"protocol": "https",
+									"host": [
+										"api",
+										"github",
+										"com"
+									],
+									"path": [
+										"projects",
+										"columns",
+										"{{columnId}}",
+										"moves"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create a Repository Project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github.inertia-preview+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"{{projectName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.github.com/repos/{{owner}}/{{repositoryName}}/projects",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"repos",
+								"{{owner}}",
+								"{{repositoryName}}",
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Repository Projects",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github.inertia-preview+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.github.com/repos/{{owner}}/{{repositoryName}}/projects",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"repos",
+								"{{owner}}",
+								"{{repositoryName}}",
+								"projects"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Teams",
+			"item": [
+				{
+					"name": "List Teams",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Team (Parent)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{teamName}}\",\r\n    \"description\": \"{{teamDescription}}\",\r\n    \"privacy\": \"{{teamPrivacy}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Team",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams/{{teamSlug}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams",
+								"{{teamSlug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Team (Child)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{teamName}}\",\r\n    \"description\": \"{{teamDescription}}\",\r\n    \"privacy\": \"{{childTeamPrivacy}}\",\r\n    \"parent_team_id\": {{parentTeamId}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Team by Name",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams/{{teamSlug}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams",
+								"{{teamSlug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Team Projects",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github.inertia-preview+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams/{{teamSlug}}/projects",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams",
+								"{{teamSlug}}",
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Team Project Permissions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github.inertia-preview+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams/{{teamSlug}}/projects/{{projectId}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams",
+								"{{teamSlug}}",
+								"projects",
+								"{{projectId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Team Permissions for a Repository",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github.inertia-preview+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams/{{teamSlug}}/repos/{{owner}}/{{repositoryName}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams",
+								"{{teamSlug}}",
+								"repos",
+								"{{owner}}",
+								"{{repositoryName}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add or Update Team Project Permissions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github.inertia-preview+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"permission\": \"{{teamRepositoryPermission}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams/{{teamSlug}}/repos/{{owner}}/{{repositoryName}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams",
+								"{{teamSlug}}",
+								"repos",
+								"{{owner}}",
+								"{{repositoryName}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add or Update Team Repository Permissions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github.inertia-preview+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"permission\": \"{{teamProjectPermission}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams/{{teamSlug}}/projects/{{projectId}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams",
+								"{{teamSlug}}",
+								"projects",
+								"{{projectId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove a Project from a Team",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github.inertia-preview+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams/{{teamSlug}}/projects/{{projectId}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams",
+								"{{teamSlug}}",
+								"projects",
+								"{{projectId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Team Repositories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams/{{teamSlug}}/repos",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams",
+								"{{teamSlug}}",
+								"repos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove a Repository from a Team",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github.inertia-preview+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams/{{teamSlug}}/repos/{{owner}}/{{repositoryName}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams",
+								"{{teamSlug}}",
+								"repos",
+								"{{owner}}",
+								"{{repositoryName}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Child Teams",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams/{{teamSlug}}/teams",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams",
+								"{{teamSlug}}",
+								"teams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Team",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{teamName}}\",\r\n    \"description\": \"{{teamDescription}}\",\r\n    \"privacy\": \"{{teamPrivacy}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.github.com/orgs/{{organisation}}/teams/{{teamSlug}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"orgs",
+								"{{organisation}}",
+								"teams",
+								"{{teamSlug}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get Rate Limit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.github.com/rate_limit",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"rate_limit"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
