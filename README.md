@@ -1,8 +1,8 @@
 # GitHubAPI_PostmanCollection
-GitHub has exposed an API that allows certain actions to be executed through various API calls. 
+GitHub has exposed a REST API that allows certain actions to be executed through various API calls. 
 GitHub API Documentation: https://docs.github.com/en/rest/reference
 
-This GitHub API collection can be loaded into Postman but for this to work, an environment (named GitHub - Dev) should be created with the following variables:
+This GitHub API collection can be loaded into Postman but for this to work, an environment should be created with the following variables:
 - token: The personal access token created on GitHub (https://docs.github.com/en/github/authenticating-to-github/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on)
 - repositoryName: Name of the repository
 - owner: Username of the owner 
