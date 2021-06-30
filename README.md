@@ -75,4 +75,19 @@ This collection covers the following actions and accommodates the following call
   - Create a Repository Project
   - List Repository Projects
 - Teams
+  - List Teams
+  - Create a Team (Parent)
+  - Delete a Team
+  - Create a Team (Child)
+  - Get a Team by Name
+  - List Team Projects
+  - Check Team Project Permissions
+  - Check Team Permissions for a Repository
+  - Add or Update Team Project Permissions
+  - Add or Update Team Repository Permissions
+  - Remove a Project from a Team
+  - List Team Repositories
+  - Remove a Repository from a Team
+  - List Child Teams
+  - Update a Team
 - Get Rate Limit
